@@ -1,0 +1,103 @@
+@theme "/dev/null"
+@import "colors.rasi"
+
+configuration {
+    font:                        "JetBrainsMono Nerd Font 14";
+    show-icons:                  false;
+    icon-theme:                  "elementary-xfce";
+    hover-select:                true;
+    me-select-entry:             "";
+    me-accept-entry:             "MousePrimary";
+}
+
+window {
+    enabled:                     true;
+    location:                    center;
+    anchor:                      center;
+    fullscreen:                  false;
+    width:                       860px;
+    x-offset:                    0px;
+    y-offset:                    0px;
+    border:                      2px solid;
+    border-color:                @border;
+    border-radius:               12px;
+    transparency:                "real";
+    cursor:                      "default";
+    background-color:            @backgroundalpha;
+}
+
+mainbox {
+    enabled:                     true;
+    spacing:                     0px;
+    margin:                      0px;
+    padding:                     0px;
+    background-color:            transparent;
+    children:                    [ "listview", "message" ];
+}
+
+listview {
+    enabled:                     true;
+    columns:                     5;
+    lines:                       1;
+    cycle:                       true;
+    dynamic:                     true;
+    scrollbar:                   false;
+    layout:                      vertical;
+    reverse:                     false;
+    fixed-height:                true;
+    fixed-columns:               true;
+    spacing:                     30px;
+    margin:                      30px;
+    background-color:            transparent;
+    text-color:                  @foregroundsecondary;
+    cursor:                      "default";
+}
+
+element {
+    enabled:                     true;
+    orientation:                 vertical;
+    children:                    [ "element-text" ];
+    spacing:                     0px;
+    width:                       140px;
+    padding:                     30px 14px;
+    border:                      2px solid;
+    border-color:                @border;
+    border-radius:               14px;
+    background-color:            @backgroundalpha;
+    text-color:                  @foregroundsecondary;
+    cursor:                      pointer;
+}
+
+element normal.normal {
+    background-color:            @backgroundalpha;
+    text-color:                  inherit;
+}
+
+element selected.normal {
+    background-color:            @c6alpha;
+    border-color:                @c6;
+    text-color:                  @foreground;
+}
+
+element-text {
+    background-color:            transparent;
+    text-color:                  inherit;
+    cursor:                      inherit;
+    font:                        "JetBrainsMono Nerd Font 40";
+    vertical-align:              0.5;
+    horizontal-align:            0.5;
+}
+
+message {
+    background-color:            transparent;
+    margin:                      0px;
+}
+
+textbox {
+    padding:                     14px 18px;
+    border-radius:               0px 0px 10px 10px;
+    background-color:            @c1alpha;
+    text-color:                  @foreground;
+    vertical-align:              0.5;
+    horizontal-align:            0.5;
+}

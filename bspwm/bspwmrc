@@ -1,0 +1,35 @@
+#!/bin/sh
+
+# Set Monitor Desktops
+bspc monitor -d I II III IV V
+
+# Set Window Rules
+bspc config border_width         2
+bspc config window_gap           10
+bspc config split_ratio          0.5
+bspc config borderless_monocle   false
+bspc config gapless_monocle      false
+bspc config automatic_scheme     longest_side
+bspc config initial_polarity     second_child
+bspc wm --record-history on
+border_color="$(awk -F '=' '$1 ~ /^[[:space:]]*border[[:space:]]*$/ { gsub(/[[:space:]]/, "", $2); print $2 }' ~/.config/colors.txt)"
+bspc config focused_border_color  "$border_color"
+
+# Start sxhkd
+pgrep -x sxhkd > /dev/null || sxhkd &
+
+# Launch Picom
+~/.config/bspwm/scripts/picom_launcher.sh &
+
+# XFCE Settings Daemon
+xfsettingsd &
+
+# Run Color Generator
+python3 ~/.config/bspwm/scripts/gradient.py
+
+# Launch Polybar
+~/.config/bspwm/scripts/polybar_launcher.sh &
+
+# Launch Nitrogen
+pkill -fx "$HOME/.config/bspwm/scripts/wallpaper.sh"
+"$HOME/.config/bspwm/scripts/wallpaper.sh" &

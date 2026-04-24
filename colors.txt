@@ -1,0 +1,8 @@
+start = #fdccd6
+end = #ffaf00
+steps = 6
+background = #443968
+foreground = #000000
+foregroundsecondary = #ffffff
+border = #5b3a98
+alpha = b8

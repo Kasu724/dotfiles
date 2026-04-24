@@ -1,0 +1,99 @@
+@theme "/dev/null"
+@import "colors.rasi"
+
+configuration {
+    modi:                        "window";
+    display-window:              "Windows";
+    font:                        "JetBrainsMono Nerd Font 14";
+    show-icons:                  true;
+    icon-theme:                  "Colloid";
+    window-format:               "{t:-1}";
+}
+
+window {
+    enabled:                     true;
+    location:                    center;
+    anchor:                      center;
+    fullscreen:                  false;
+    x-offset:                    0px;
+    y-offset:                    0px;
+    border:                      2px solid;
+    border-color:                @border;
+    border-radius:               12px;
+    cursor:                      "default";
+    transparency:                "real";
+    background-color:            @backgroundalpha;
+}
+
+mainbox {
+    enabled:                     true;
+    children:                    [ "listview" ];
+    background-color:            transparent;
+}
+
+listview {
+    enabled:                     true;
+    columns:                     1;
+    lines:                       1;
+    spacing:                     12px;
+    padding:                     18px;
+    cycle:                       true;
+    dynamic:                     false;
+    scrollbar:                   false;
+    layout:                      vertical;
+    reverse:                     false;
+    fixed-height:                false;
+    fixed-columns:               true;
+    cursor:                      "default";
+    background-color:            transparent;
+    text-color:                  @foregroundsecondary;
+}
+
+element {
+    enabled:                     true;
+    spacing:                     2px;
+    padding:                     4px;
+    orientation:                 vertical;
+    border-radius:               10px;
+    cursor:                      pointer;
+    background-color:            transparent;
+    text-color:                  @foregroundsecondary;
+}
+
+element normal.active {
+    background-color:            @c3alpha;
+    text-color:                  @foreground;
+}
+
+element selected.normal {
+    background-color:            @c6alpha;
+    text-color:                  @foreground;
+}
+
+element selected.active {
+    background-color:            @c1alpha;
+    text-color:                  @foreground;
+}
+
+element-icon {
+    expand:                      true;
+    size:                        300px;
+    margin:                      10px;
+    padding:                     0px;
+    vertical-align:              0.5;
+    cursor:                      inherit;
+    background-color:            transparent;
+    text-color:                  inherit;
+}
+
+element-text {
+    enabled:                     true;
+    expand:                      false;
+    font:                        "JetBrainsMono Nerd Font 10";
+    vertical-align:              0.0;
+    horizontal-align:            0.5;
+    padding:                     12px;
+    cursor:                      inherit;
+    background-color:            transparent;
+    text-color:                  inherit;
+}
