@@ -50,6 +50,6 @@ super + z
 
 # Hide/Show window
 super + h
-    bspc node -g hidden
+    ~/.config/bspwm/scripts/alt_tab.sh --hide
 super + j
-    bspc node $(bspc query -N -n .hidden | tail -n1) -g hidden=off
+    ~/.config/bspwm/scripts/alt_tab.sh --show-last
