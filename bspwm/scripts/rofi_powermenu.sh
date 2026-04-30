@@ -86,7 +86,7 @@ no='  '
 rofi_cmd() {
     rofi -dmenu \
         -p "󰟪 $USER@$host" \
-        -mesg "󱫐 Last Login: $last_login     󰔚 Uptime: $uptime_text" \
+        -mesg " Last Login: $last_login     󰔚 Uptime: $uptime_text" \
         -config "$theme" \
         -theme "$HOME/.config/rofi/powermenu.rasi"
 }

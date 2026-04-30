@@ -30,6 +30,7 @@ python3 ~/.config/bspwm/scripts/gradient.py
 # Launch Polybar
 ~/.config/bspwm/scripts/polybar_launcher.sh &
 
-# Launch Nitrogen
-pkill -fx "$HOME/.config/bspwm/scripts/wallpaper.sh"
+# Launch wallpaper rotator
+pkill -u "$USER" -f '/bspwm/scripts/wallpaper[.]sh'
+while pgrep -u "$USER" -f '/bspwm/scripts/wallpaper[.]sh' >/dev/null; do sleep 1; done
 "$HOME/.config/bspwm/scripts/wallpaper.sh" &
