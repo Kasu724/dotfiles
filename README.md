@@ -1,19 +1,20 @@
 # Dotfiles
 
-My Xubuntu `bspwm` desktop setup built with `polybar`, `rofi`, `picom`, and `sxhkd`.
+My Xubuntu `bspwm` desktop setup with `polybar`, `rofi`, `picom`, and `sxhkd`.
 
-The theme is shared across the desktop through a palette file in `colors.txt`. A helper script, `gradient.py`, turns that palette into matching color files for Polybar and Rofi, so the bar, launcher, and powermenu stay in sync.
+The color theme is shared across the desktop through a palette file in `colors.txt`.  A helper script, `gradient.py`, turns that palette into matching color files for Polybar and Rofi.
 
-## What this repo includes
+I like Ninomae Ina'nis
+
+## Features
 
 - `bspwm` window manager config
 - `sxhkd` keybindings
 - `polybar` with workspace, launcher, system, network, and clock modules
 - `rofi` app launcher, powermenu, and Alt+Tab switcher
 - `picom` config with blur, rounded corners, opacity rules, and animations
-- rotating wallpaper and random launcher-image helpers
-- bundled fonts, wallpapers, and image assets
-- a small `.bashrc` tweak
+- `nitrogen` rotating wallpaper and random launcher-image helpers
+- `.bashrc` tweak for different terminal colors
 
 ## Layout
 
@@ -31,17 +32,6 @@ The theme is shared across the desktop through a palette file in `colors.txt`. A
 └── wallpapers/
 ```
 
-## Features
-
-- Five `bspwm` desktops, `I` through `V`
-- Shared palette generation for Polybar and Rofi via `bspwm/scripts/gradient.py`
-- Polybar launcher buttons for browser, terminal, file manager, and VS Code
-- Rofi app launcher with a randomly selected side image
-- Rofi powermenu applet
-- Thumbnail-based Alt+Tab menu
-- `picom` animations
-- Wallpaper rotation via `nitrogen`
-
 ## Dependencies
 
 Package names vary by distro, but this setup expects roughly:
@@ -55,16 +45,15 @@ Package names vary by distro, but this setup expects roughly:
 - `python3`
 - `xfsettingsd`
 - `xfce4-terminal`
+- `flameshot`
 - `pavucontrol`
 - `network-manager` tools such as `nm-connection-editor`
 - one lock command such as `betterlockscreen`, `i3lock-color`, `i3lock`, `slock`, or `xscreensaver-command`
 - Nerd Fonts, especially `JetBrainsMono Nerd Font` and `Symbols Nerd Font Mono`
 
-The current Rofi configs also reference the `Colloid` and `elementary-xfce` icon themes.
-
 ## Installation
 
-This repo is laid out to mirror `~/.config`, so symlinking works well.
+This repo is laid out to mirror `~/.config`, so symlinking is intended
 
 ```bash
 mkdir -p ~/.config ~/.local/share/fonts ~/Pictures
@@ -117,20 +106,12 @@ Start here if you want to make the setup your own:
 - `rofi/config.rasi`, `rofi/powermenu.rasi`, `rofi/alt-tab.rasi`: launcher and switcher styling
 - `picom/picom.conf`: blur, opacity, shadows, corner radius, and animation behavior
 
-Whenever you change `colors.txt`, regenerate the shared colors with:
-
-```bash
-python3 ~/.config/bspwm/scripts/gradient.py
-```
-
 ## Machine-specific notes
 
-This setup is personal enough that a few values should be updated on a new machine:
+A few values should be updated on a new machine:
 
 - `polybar/config.ini` uses `wlp0s20f3` for Wi-Fi and `enp0s3` for Ethernet
-- the bar launches `google-chrome-stable`, `xfce4-terminal`, `thunar`, and `code`
-- `rofi/config.rasi` uses the `Colloid` icon theme
-- `rofi/powermenu.rasi` uses the `elementary-xfce` icon theme
+- `polybar` launches `google-chrome-stable`, `xfce4-terminal`, `thunar`, and `code`
 - `bspwm/scripts/wallpaper.sh` expects wallpapers in `~/Pictures/wallpapers`
 - `bspwm/scripts/rofi_launcher.sh` expects launcher images in `~/Pictures/rofi_images`
 
