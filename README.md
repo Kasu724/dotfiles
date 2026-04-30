@@ -18,7 +18,6 @@ The theme is shared across the desktop through a palette file in `colors.txt`. A
 ## Layout
 
 ```text
-.
 ├── .bashrc
 ├── bspwm/
 ├── colors.txt

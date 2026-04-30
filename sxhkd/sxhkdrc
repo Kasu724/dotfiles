@@ -1,36 +1,10 @@
-# Terminal
-super + Return
-    xfce4-terminal
-
-# Rofi
-super + shift + d
-    ~/.config/bspwm/scripts/rofi_powermenu.sh
-ctrl + shift + space
-    ~/.config/bspwm/scripts/rofi_powermenu.sh
-super + d
-    ~/.config/bspwm/scripts/rofi_launcher.sh
-ctrl + space
-    ~/.config/bspwm/scripts/rofi_launcher.sh
-
-# Alt+Tab
-alt + ~Tab
-    ~/.config/bspwm/scripts/alt_tab.sh
+########################
+#     Window Stuff     #
+########################
 
 # Close window
 super + q
     bspc node -c
-
-# Reload sxhkd
-super + Escape
-    pkill -USR1 -x sxhkd
-
-# Focus windows
-super + {Left,Down,Up,Right}
-    bspc node -f {west,south,north,east}
-
-# Move windows
-super + shift + {Left,Down,Up,Right}
-    bspc node -s {west,south,north,east}
 
 # Switch desktops
 super + {1-9,0}
@@ -39,6 +13,14 @@ super + {1-9,0}
 # Move window to desktop
 super + shift + {1-9,0}
     bspc node -d '^{1-9,10}'
+
+# Focus windows
+super + {Left,Down,Up,Right}
+    bspc node -f {west,south,north,east}
+
+# Move windows
+super + shift + {Left,Down,Up,Right}
+    bspc node -s {west,south,north,east}
 
 # Toggle fullscreen
 super + a
@@ -53,3 +35,43 @@ super + h
     ~/.config/bspwm/scripts/alt_tab.sh --hide
 super + j
     ~/.config/bspwm/scripts/alt_tab.sh --show-last
+
+######################
+#     Rofi Stuff     #
+######################
+
+# App launcher
+super + d
+    ~/.config/bspwm/scripts/rofi_launcher.sh
+ctrl + space
+    ~/.config/bspwm/scripts/rofi_launcher.sh
+
+# Powermenu
+super + shift + d
+    ~/.config/bspwm/scripts/rofi_powermenu.sh
+ctrl + shift + space
+    ~/.config/bspwm/scripts/rofi_powermenu.sh
+
+####################
+#    App Stuff     #
+####################
+
+# Terminal
+super + Return
+    xfce4-terminal
+
+# Flameshot
+super + shift + s
+    flameshot gui
+
+#######################
+#     Other Stuff     #
+#######################
+
+# Alt+Tab
+alt + ~Tab
+    ~/.config/bspwm/scripts/alt_tab.sh
+
+# Reload sxhkd
+super + Escape
+    pkill -USR1 -x sxhkd
