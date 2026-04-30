@@ -64,26 +64,34 @@ The current Rofi configs also reference the `Colloid` and `elementary-xfce` icon
 
 ## Installation
 
-This repo is laid out to mirror `~/.config`, so symlinking works well.
+Run the installer from the repo root:
 
 ```bash
-mkdir -p ~/.config ~/.local/share/fonts ~/Pictures
-
-ln -sfn "$PWD/bspwm" ~/.config/bspwm
-ln -sfn "$PWD/picom" ~/.config/picom
-ln -sfn "$PWD/polybar" ~/.config/polybar
-ln -sfn "$PWD/rofi" ~/.config/rofi
-ln -sfn "$PWD/sxhkd" ~/.config/sxhkd
-ln -sfn "$PWD/colors.txt" ~/.config/colors.txt
-
-ln -sfn "$PWD/wallpapers" ~/Pictures/wallpapers
-ln -sfn "$PWD/rofi_images" ~/Pictures/rofi_images
-ln -sfn "$PWD/fonts" ~/.local/share/fonts/dotfiles-fonts
-
-fc-cache -fv
+./install.sh
 ```
 
-After that:
+The installer:
+
+- installs the Xubuntu/apt packages needed by the configs and scripts
+- creates the `~/.config`, `~/Pictures`, and font symlinks
+- backs up existing files or directories before replacing them with symlinks
+- refreshes the font cache
+- regenerates the Polybar and Rofi color files
+
+It does not replace `~/.bashrc` by default. To link the bundled shell config too, run:
+
+```bash
+./install.sh --link-bashrc
+```
+
+Useful options:
+
+```bash
+./install.sh --skip-packages
+./install.sh --dry-run
+```
+
+After installation:
 
 1. Start `bspwm` from your display manager or session.
 2. Let `bspwmrc` launch `sxhkd`, `picom`, `polybar`, the palette generator, and the wallpaper loop.
