@@ -117,6 +117,7 @@ Start here if you want to make the setup your own:
 - `polybar/config.ini`: launcher apps, fonts, modules, and network interface names
 - `rofi/config.rasi`, `rofi/powermenu.rasi`, `rofi/alt-tab.rasi`: launcher and switcher styling
 - `picom/picom.conf`: blur, opacity, shadows, corner radius, and animation behavior
+- `.bash_alises`: command aliases
 
 ## Machine-specific notes
 
@@ -132,3 +133,6 @@ A few values should be updated on a new machine:
 - `fonts/` contains JetBrains Mono Nerd Font and Symbols Nerd Font files
 - `wallpapers/` contains the wallpaper pool used by the rotator
 - `rofi_images/` contains the images used by the launcher
+- Aliases:
+    - `mybonsai`: custom cbonsai animation
+    - `myfetch`: custom anifetch animation
