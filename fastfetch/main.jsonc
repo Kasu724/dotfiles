@@ -1,0 +1,138 @@
+{
+  "modules": [
+    {
+      "type": "title",
+      "key": "User",
+      "keyColor": "38;5;209",
+      "color": {
+        "user": "38;5;177",
+        "at": "38;5;177",
+        "host": "38;5;177"
+      }
+    },
+
+    "break",
+
+    {
+      "type": "custom",
+      "format": "\u001b[90m┌────────────────────────OS────────────────────────┐"
+    },
+    {
+      "type": "os",
+      "key": " OS",
+      "keyColor": "38;5;221",
+      "keyWidth": 12,
+      "format": "{name} {version}"
+    },
+    {
+      "type": "host",
+      "key": " Host",
+      "keyColor": "38;5;221",
+      "keyWidth": 12
+    },
+    {
+      "type": "kernel",
+      "key": " Kernel",
+      "keyColor": "38;5;221",
+      "keyWidth": 12
+    },
+    {
+      "type": "custom",
+      "format": "\u001b[90m└──────────────────────────────────────────────────┘"
+    },
+
+    "break",
+
+    {
+      "type": "custom",
+      "format": "\u001b[90m┌─────────────────────Hardware─────────────────────┐"
+    },
+    {
+      "type": "display",
+      "key": " Display",
+      "keyColor": "38;5;204",
+      "keyWidth": 12
+    },
+    {
+      "type": "cpu",
+      "key": " CPU",
+      "keyColor": "38;5;204",
+      "keyWidth": 12
+    },
+    {
+      "type": "gpu",
+      "key": " GPU",
+      "keyColor": "38;5;204",
+      "keyWidth": 12
+    },
+    {
+      "type": "memory",
+      "key": " Memory",
+      "keyColor": "38;5;204",
+      "keyWidth": 12
+    },
+    {
+      "type": "disk",
+      "key": " Disk",
+      "keyColor": "38;5;204",
+      "keyWidth": 12
+    },
+    {
+      "type": "custom",
+      "format": "\u001b[90m└──────────────────────────────────────────────────┘"
+    },
+
+    "break",
+
+    {
+      "type": "custom",
+      "format": "\u001b[90m┌─────────────────────Software─────────────────────┐"
+    },
+    {
+      "type": "de",
+      "key": " DE",
+      "keyColor": "38;5;120",
+      "keyWidth": 12
+    },
+    {
+      "type": "wm",
+      "key": " WM",
+      "keyColor": "38;5;120",
+      "keyWidth": 12
+    },
+    {
+      "type": "terminal",
+      "key": " Terminal",
+      "keyColor": "38;5;120",
+      "keyWidth": 12
+    },
+    {
+      "type": "custom",
+      "format": "\u001b[90m└──────────────────────────────────────────────────┘"
+    },
+
+    "break",
+
+    {
+      "type": "custom",
+      "format": "\u001b[90m┌───────────────────────Time───────────────────────┐"
+    },
+    {
+      "type": "uptime",
+      "key": " Uptime",
+      "keyColor": "38;5;123",
+      "keyWidth": 12
+    },
+    {
+      "type": "command",
+      "key": " OS Age",
+      "keyColor": "38;5;123",
+      "keyWidth": 12,
+      "text": "birth_install=$(stat -c %W /); current=$(date +%s); time_progression=$((current - birth_install)); days_difference=$((time_progression / 86400)); echo $days_difference days"
+    },
+    {
+      "type": "custom",
+      "format": "\u001b[90m└──────────────────────────────────────────────────┘"
+    }
+  ]
+}

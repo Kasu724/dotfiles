@@ -86,6 +86,10 @@ After installation:
 2. Let `bspwmrc` launch `sxhkd`, `picom`, `polybar`, the palette generator, and the wallpaper loop.
 3. Adjust the machine-specific values listed below before treating this as plug-and-play.
 
+To make anifetch run on startup:
+1. Settings → Session and Startup → Application Autostart
+2. Click Add
+3. Command: `xfce4-terminal -e "myfetch; bash"`
 ## Keybindings
 
 The main bindings live in `sxhkd/sxhkdrc`.

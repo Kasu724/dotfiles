@@ -17,11 +17,17 @@ apt_packages=(
     picom
     nitrogen
     python3
+    python3-venv
+    pipx
+    curl
+    ca-certificates
     xfce4-settings
     xfce4-terminal
     pavucontrol
     network-manager-gnome
     flameshot
+    chafa
+    ffmpeg
     imagemagick
     x11-utils
     fontconfig
@@ -46,11 +52,16 @@ required_commands=(
     picom
     nitrogen
     python3
+    pipx
     xfsettingsd
     xfce4-terminal
     pavucontrol
     nm-connection-editor
     flameshot
+    chafa
+    ffmpeg
+    fastfetch
+    anifetch
     import
     xprop
     xwininfo
@@ -102,6 +113,19 @@ run() {
     "$@"
 }
 
+run_as_root() {
+    local sudo_cmd=()
+
+    if (( EUID != 0 )); then
+        if ! command -v sudo >/dev/null 2>&1 && (( ! dry_run )); then
+            die "sudo is required to install packages"
+        fi
+        sudo_cmd=(sudo)
+    fi
+
+    run "${sudo_cmd[@]}" "$@"
+}
+
 parse_args() {
     while (($#)); do
         case "$1" in
@@ -127,7 +151,6 @@ parse_args() {
 }
 
 install_apt_packages() {
-    local sudo_cmd=()
     local optional_available=()
     local optional_missing=()
     local package
@@ -138,16 +161,11 @@ install_apt_packages() {
         return 0
     fi
 
-    if (( EUID != 0 )); then
-        command -v sudo >/dev/null 2>&1 || die "sudo is required to install packages"
-        sudo_cmd=(sudo)
-    fi
-
     log "Updating apt package lists"
-    run "${sudo_cmd[@]}" apt-get update
+    run_as_root apt-get update
 
     log "Installing required apt packages"
-    run "${sudo_cmd[@]}" apt-get install -y "${apt_packages[@]}"
+    run_as_root apt-get install -y "${apt_packages[@]}"
 
     for package in "${optional_apt_packages[@]}"; do
         if apt-cache show "$package" >/dev/null 2>&1; then
@@ -159,11 +177,107 @@ install_apt_packages() {
 
     if ((${#optional_available[@]})); then
         log "Installing optional apt packages available in your repositories"
-        run "${sudo_cmd[@]}" apt-get install -y "${optional_available[@]}"
+        run_as_root apt-get install -y "${optional_available[@]}"
     fi
 
     if ((${#optional_missing[@]})); then
         warn "optional packages not found in enabled apt repositories: ${optional_missing[*]}"
+    fi
+}
+
+fastfetch_release_arch() {
+    local arch
+
+    arch="$(dpkg --print-architecture)"
+    case "$arch" in
+        amd64)
+            printf 'amd64'
+            ;;
+        arm64)
+            printf 'aarch64'
+            ;;
+        armhf)
+            printf 'armv7l'
+            ;;
+        armel)
+            printf 'armv6l'
+            ;;
+        i386)
+            printf 'i686'
+            ;;
+        ppc64el)
+            printf 'ppc64le'
+            ;;
+        riscv64|s390x)
+            printf '%s' "$arch"
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+download_file() {
+    local url="$1"
+    local output="$2"
+
+    if command -v curl >/dev/null 2>&1 || (( dry_run )); then
+        run curl -fsSL -o "$output" "$url"
+    elif command -v wget >/dev/null 2>&1; then
+        run wget -qO "$output" "$url"
+    else
+        die "curl or wget is required to download $url"
+    fi
+}
+
+install_fastfetch() {
+    local release_arch
+    local deb_path
+    local deb_url
+
+    if command -v fastfetch >/dev/null 2>&1; then
+        log "fastfetch is already installed"
+        return 0
+    fi
+
+    if apt-cache show fastfetch >/dev/null 2>&1; then
+        log "Installing fastfetch from apt"
+        run_as_root apt-get install -y fastfetch
+        return 0
+    fi
+
+    if ! release_arch="$(fastfetch_release_arch)"; then
+        warn "unsupported architecture for fastfetch GitHub release: $(dpkg --print-architecture)"
+        return 0
+    fi
+
+    deb_path="${TMPDIR:-/tmp}/fastfetch-linux-${release_arch}.deb"
+    deb_url="https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-${release_arch}.deb"
+
+    log "Downloading fastfetch Debian package"
+    download_file "$deb_url" "$deb_path"
+
+    log "Installing fastfetch Debian package"
+    run_as_root apt-get install -y "$deb_path"
+}
+
+install_anifetch() {
+    local package_url='git+https://github.com/Notenlish/anifetch.git#egg=anifetch-cli'
+
+    if command -v anifetch >/dev/null 2>&1; then
+        log "anifetch is already installed"
+        return 0
+    fi
+
+    if ! command -v pipx >/dev/null 2>&1 && (( ! dry_run )); then
+        die "pipx is required to install anifetch"
+    fi
+
+    log "Installing anifetch with pipx"
+    run pipx install "$package_url"
+
+    if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
+        warn "pipx installs commands to ~/.local/bin, which is not currently in PATH"
     fi
 }
 
@@ -283,6 +397,8 @@ main() {
 
     if (( install_packages )); then
         install_apt_packages
+        install_fastfetch
+        install_anifetch
     else
         log "Skipping package installation"
     fi

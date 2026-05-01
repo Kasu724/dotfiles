@@ -8,7 +8,7 @@ bspc config border_width         2
 bspc config window_gap           10
 bspc config split_ratio          0.5
 bspc config borderless_monocle   false
-bspc config gapless_monocle      false
+bspc config gapless_monocle      true
 bspc config automatic_scheme     longest_side
 bspc config initial_polarity     second_child
 bspc wm --record-history on
@@ -34,3 +34,4 @@ python3 ~/.config/bspwm/scripts/gradient.py
 pkill -u "$USER" -f '/bspwm/scripts/wallpaper[.]sh'
 while pgrep -u "$USER" -f '/bspwm/scripts/wallpaper[.]sh' >/dev/null; do sleep 1; done
 "$HOME/.config/bspwm/scripts/wallpaper.sh" &
+
