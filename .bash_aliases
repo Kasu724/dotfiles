@@ -1,5 +1,7 @@
 alias mybonsai='cbonsai -ilm "wah!"'
 
+alias mymatrix='unimatrix -afos 96'
+
 myfetch() {
     local video="${1:-takodachi.gif}"
 

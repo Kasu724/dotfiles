@@ -22,6 +22,14 @@ super + {Left,Down,Up,Right}
 super + shift + {Left,Down,Up,Right}
     bspc node -s {west,south,north,east}
 
+# Set insertion position
+super + ctrl + {Left,Down,Up,Right}
+    bspc node -p {west,south,north,east}
+
+# Toggle split type
+super + r
+    bspc node @parent -y next
+
 # Toggle fullscreen
 super + a
     bspc desktop -l next
@@ -57,8 +65,20 @@ ctrl + shift + space
 ####################
 
 # Terminal
-super + Return
+super + t
     xfce4-terminal
+
+# File Manager
+super + f
+    thunar
+
+# Web Browser
+super + w
+    google-chrome-stable
+
+# VS Code
+super + c
+    code
 
 # Flameshot
 super + shift + s
