@@ -13,7 +13,9 @@ bspc config automatic_scheme     alternate
 bspc config initial_polarity     second_child
 bspc wm --record-history on
 border_color="$(awk -F '=' '$1 ~ /^[[:space:]]*border[[:space:]]*$/ { gsub(/[[:space:]]/, "", $2); print $2 }' ~/.config/colors.txt)"
-bspc config focused_border_color  "$border_color"
+preselection_color="$(awk -F '=' '$1 ~ /^[[:space:]]*preselection[[:space:]]*$/ { gsub(/[[:space:]]/, "", $2); print $2 }' ~/.config/colors.txt)"
+bspc config focused_border_color "$border_color"
+bspc config presel_feedback_color "$preselection_color"
 
 # Start sxhkd
 pgrep -x sxhkd > /dev/null || sxhkd &
@@ -34,4 +36,3 @@ python3 ~/.config/bspwm/scripts/gradient.py
 pkill -u "$USER" -f '/bspwm/scripts/wallpaper[.]sh'
 while pgrep -u "$USER" -f '/bspwm/scripts/wallpaper[.]sh' >/dev/null; do sleep 1; done
 "$HOME/.config/bspwm/scripts/wallpaper.sh" &
-
