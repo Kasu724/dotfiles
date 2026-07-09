@@ -5,5 +5,5 @@ background = #443968
 foreground = #000000
 foregroundsecondary = #ffffff
 border = #5b3a98
-preselection = #ffaf00
+preselection = #5b3a98
 alpha = b8
