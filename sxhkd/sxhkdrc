@@ -26,6 +26,9 @@ super + shift + {Left,Down,Up,Right}
 super + ctrl + {Left,Down,Up,Right}
     bspc node -p {west,south,north,east}
 
+super + ctrl + space
+    bspc node -p cancel
+
 # Toggle split type
 super + r
     bspc node @parent -y next
