@@ -10,7 +10,11 @@ myhelp() {
         '  mybonsai   - custom cbonsai: cbonsai -ilm "wah!"' \
         '  mymatrix   - custom unimatrix: unimatrix -afos 96' \
         '  myquarium  - custom asciiquarium' \
-        '  myfetch    - custom anifetch: anifetch with takodachi animation'
+        '  myfetch    - custom anifetch: anifetch with takodachi animation' \
+        '' \
+        'Dotfiles commands:' \
+        '  ~/dotfiles/update.sh          - pull and refresh the dotfiles' \
+        '  ~/dotfiles/update.sh --reload - also reload the running desktop'
 }
 
 alias myhelp='myhelp'

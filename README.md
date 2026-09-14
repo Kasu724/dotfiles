@@ -85,6 +85,25 @@ Useful options:
 ./install.sh --dry-run
 ```
 
+## Updating another machine
+
+After committing and pushing changes from one machine, update an already
+installed machine with:
+
+```bash
+./update.sh
+```
+
+The updater pulls the current branch with `--ff-only`, reruns the installer
+without installing packages, and refreshes the generated color and font files.
+It keeps local changes and stops if they conflict with the incoming commits.
+
+To also reload a running bspwm desktop and its components:
+
+```bash
+./update.sh --reload
+```
+
 After installation:
 
 1. Start `bspwm` from your display manager or session.
