@@ -116,5 +116,5 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Created by `pipx` on 2026-05-01 05:17:25
-export PATH="$PATH:/home/kevin/.local/bin"
+# Commands installed by pipx live here on every user's account.
+export PATH="$HOME/.local/bin:$PATH"

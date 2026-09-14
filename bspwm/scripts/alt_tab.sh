@@ -122,7 +122,7 @@ focus_window() {
 show_last_hidden_window() {
     local wid
 
-    wid="$(bspc query -N -n '.window.hidden' 2>/dev/null | tail -n1 || true)"
+    wid="$(bspc query -N -d focused -n '.window.hidden' 2>/dev/null | tail -n1 || true)"
 
     if [[ -z "$wid" ]]; then
         exit 0
@@ -138,15 +138,15 @@ show_combined_menu() {
     local -a wids=()
     local wid title class desktop preview_path display meta icon
     local screen_width usable_width_px per_tab_width_px max_columns columns rows menu_width_px
-    local total_count menu_input_file selected_index index
+    local total_count menu_input_file selected_index selected_row index
 
     while IFS= read -r wid; do
         [[ -n "$wid" ]] && visible_wids+=("$wid")
-    done < <(bspc query -N -n '.window.!hidden' 2>/dev/null || true)
+    done < <(bspc query -N -d focused -n '.window.!hidden' 2>/dev/null || true)
 
     while IFS= read -r wid; do
         [[ -n "$wid" ]] && hidden_wids+=("$wid")
-    done < <(bspc query -N -n '.window.hidden' 2>/dev/null || true)
+    done < <(bspc query -N -d focused -n '.window.hidden' 2>/dev/null || true)
 
     total_count=$(( ${#visible_wids[@]} + ${#hidden_wids[@]} ))
 
@@ -181,6 +181,12 @@ show_combined_menu() {
     menu_width_px=$((menu_width_px + 36 + 4))
 
     menu_input_file="$(mktemp)"
+    selected_row=0
+
+    if (( total_count > 1 )); then
+        selected_row=1
+    fi
+
     index=0
 
     for wid in "${visible_wids[@]}"; do
@@ -250,7 +256,7 @@ show_combined_menu() {
             -theme-str "window { width: ${menu_width_px}px; } listview { columns: ${columns}; lines: ${rows}; }" \
             -show-icons \
             -steal-focus \
-            -selected-row 1 \
+            -selected-row "$selected_row" \
             -matching fuzzy \
             -no-lazy-grab \
             -hover-select \
@@ -294,14 +300,14 @@ case "${1:-}" in
         ;;
 esac
 
-tab_count="$(bspc query -N -n '.window.!hidden' 2>/dev/null | awk 'END { print NR }' || true)"
+tab_count="$(bspc query -N -d focused -n '.window.!hidden' 2>/dev/null | awk 'END { print NR }' || true)"
 tab_count="${tab_count:-0}"
 
 if (( tab_count < 1 )); then
     tab_count=1
 fi
 
-hidden_tab_count="$(bspc query -N -n '.window.hidden' 2>/dev/null | awk 'END { print NR }' || true)"
+hidden_tab_count="$(bspc query -N -d focused -n '.window.hidden' 2>/dev/null | awk 'END { print NR }' || true)"
 hidden_tab_count="${hidden_tab_count:-0}"
 
 if (( hidden_tab_count > 0 )); then
@@ -345,9 +351,10 @@ menu_width_px=$((menu_width_px + list_padding_px + window_frame_px))
 theme_override="window { width: ${menu_width_px}px; } listview { columns: ${columns}; lines: ${rows}; }"
 
 exec rofi \
+    -modes windowcd \
     -theme "$HOME/.config/rofi/alt-tab.rasi" \
     -theme-str "$theme_override" \
-    -show window -show-icons -window-thumbnail \
+    -show windowcd -window-thumbnail \
     -show-icons \
     -steal-focus \
     -selected-row 1 \

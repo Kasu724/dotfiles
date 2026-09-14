@@ -15,10 +15,11 @@ apt_packages=(
     polybar
     rofi
     picom
-    nitrogen
+    feh
     python3
     python3-venv
     pipx
+    git
     curl
     ca-certificates
     xfce4-settings
@@ -39,6 +40,7 @@ apt_packages=(
 )
 
 optional_apt_packages=(
+    cbonsai
     google-chrome-stable
     code
     elementary-xfce-icon-theme
@@ -50,18 +52,12 @@ required_commands=(
     polybar
     rofi
     picom
-    nitrogen
     python3
-    pipx
     xfsettingsd
     xfce4-terminal
     pavucontrol
     nm-connection-editor
     flameshot
-    chafa
-    ffmpeg
-    fastfetch
-    anifetch
     import
     xprop
     xwininfo
@@ -151,6 +147,8 @@ parse_args() {
 }
 
 install_apt_packages() {
+    local available=()
+    local missing=()
     local optional_available=()
     local optional_missing=()
     local package
@@ -164,25 +162,53 @@ install_apt_packages() {
     log "Updating apt package lists"
     run_as_root apt-get update
 
-    log "Installing required apt packages"
-    run_as_root apt-get install -y "${apt_packages[@]}"
+    for package in "${apt_packages[@]}"; do
+        if apt_package_available "$package"; then
+            available+=("$package")
+        else
+            missing+=("$package")
+        fi
+    done
+
+    if ((${#available[@]})); then
+        log "Installing apt packages available for this Ubuntu release"
+        run_as_root apt-get install -y "${available[@]}"
+    fi
+
+    if ((${#missing[@]})); then
+        warn "packages not found in enabled apt repositories: ${missing[*]}"
+        warn "continuing; missing commands will be reported after installation"
+    fi
 
     for package in "${optional_apt_packages[@]}"; do
-        if apt-cache show "$package" >/dev/null 2>&1; then
+        if apt_package_available "$package"; then
             optional_available+=("$package")
         else
             optional_missing+=("$package")
         fi
     done
 
-    if ((${#optional_available[@]})); then
-        log "Installing optional apt packages available in your repositories"
-        run_as_root apt-get install -y "${optional_available[@]}"
-    fi
+    for package in "${optional_available[@]}"; do
+        log "Installing optional apt package: $package"
+        if ! run_as_root apt-get install -y "$package"; then
+            warn "could not install optional apt package: $package"
+        fi
+    done
 
     if ((${#optional_missing[@]})); then
         warn "optional packages not found in enabled apt repositories: ${optional_missing[*]}"
     fi
+}
+
+apt_package_available() {
+    local candidate
+
+    candidate="$(
+        LC_ALL=C apt-cache policy "$1" 2>/dev/null |
+            awk '$1 == "Candidate:" { print $2; exit }'
+    )"
+
+    [[ -n "$candidate" && "$candidate" != "(none)" ]]
 }
 
 fastfetch_release_arch() {
@@ -226,7 +252,8 @@ download_file() {
     elif command -v wget >/dev/null 2>&1; then
         run wget -qO "$output" "$url"
     else
-        die "curl or wget is required to download $url"
+        warn "curl or wget is required to download $url"
+        return 1
     fi
 }
 
@@ -240,10 +267,10 @@ install_fastfetch() {
         return 0
     fi
 
-    if apt-cache show fastfetch >/dev/null 2>&1; then
+    if apt_package_available fastfetch; then
         log "Installing fastfetch from apt"
         run_as_root apt-get install -y fastfetch
-        return 0
+        return $?
     fi
 
     if ! release_arch="$(fastfetch_release_arch)"; then
@@ -255,7 +282,9 @@ install_fastfetch() {
     deb_url="https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-${release_arch}.deb"
 
     log "Downloading fastfetch Debian package"
-    download_file "$deb_url" "$deb_path"
+    if ! download_file "$deb_url" "$deb_path"; then
+        return 1
+    fi
 
     log "Installing fastfetch Debian package"
     run_as_root apt-get install -y "$deb_path"
@@ -270,11 +299,14 @@ install_anifetch() {
     fi
 
     if ! command -v pipx >/dev/null 2>&1 && (( ! dry_run )); then
-        die "pipx is required to install anifetch"
+        warn "pipx is required to install anifetch"
+        return 1
     fi
 
     log "Installing anifetch with pipx"
-    run pipx install "$package_url"
+    if ! run pipx install "$package_url"; then
+        return 1
+    fi
 
     if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
         warn "pipx installs commands to ~/.local/bin, which is not currently in PATH"
@@ -328,11 +360,14 @@ link_dotfiles() {
     link_item "$dotfiles_dir/polybar" "$HOME/.config/polybar"
     link_item "$dotfiles_dir/rofi" "$HOME/.config/rofi"
     link_item "$dotfiles_dir/sxhkd" "$HOME/.config/sxhkd"
+    link_item "$dotfiles_dir/anifetch" "$HOME/.config/anifetch"
+    link_item "$dotfiles_dir/fastfetch" "$HOME/.config/fastfetch"
     link_item "$dotfiles_dir/colors.txt" "$HOME/.config/colors.txt"
 
     link_item "$dotfiles_dir/wallpapers" "$HOME/Pictures/wallpapers"
     link_item "$dotfiles_dir/rofi_images" "$HOME/Pictures/rofi_images"
     link_item "$dotfiles_dir/fonts" "$HOME/.local/share/fonts/dotfiles-fonts"
+    link_item "$dotfiles_dir/.bash_aliases" "$HOME/.bash_aliases"
 
     if (( link_bashrc )); then
         link_item "$dotfiles_dir/.bashrc" "$HOME/.bashrc"
@@ -383,6 +418,18 @@ check_commands() {
         warn "missing commands after install: ${missing[*]}"
     fi
 
+    if ! command -v feh >/dev/null 2>&1 &&
+        ! command -v nitrogen >/dev/null 2>&1; then
+        warn "no supported wallpaper setter found; install feh or nitrogen"
+    fi
+
+    if ! command -v fastfetch >/dev/null 2>&1 ||
+        ! command -v anifetch >/dev/null 2>&1 ||
+        ! command -v chafa >/dev/null 2>&1 ||
+        ! command -v ffmpeg >/dev/null 2>&1; then
+        warn "the optional myfetch command needs fastfetch, anifetch, chafa, and ffmpeg"
+    fi
+
     if ! command -v betterlockscreen >/dev/null 2>&1 &&
         ! command -v i3lock-color >/dev/null 2>&1 &&
         ! command -v i3lock >/dev/null 2>&1 &&
@@ -397,8 +444,12 @@ main() {
 
     if (( install_packages )); then
         install_apt_packages
-        install_fastfetch
-        install_anifetch
+        if ! install_fastfetch; then
+            warn "fastfetch installation failed; continuing without the optional myfetch integration"
+        fi
+        if ! install_anifetch; then
+            warn "anifetch installation failed; continuing without the optional myfetch integration"
+        fi
     else
         log "Skipping package installation"
     fi

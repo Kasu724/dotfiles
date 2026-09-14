@@ -13,15 +13,18 @@ I like Ninomae Ina'nis
 - `polybar` with workspace, launcher, system, network, and clock modules
 - `rofi` app launcher, powermenu, and Alt+Tab switcher
 - `picom` config with blur, rounded corners, opacity rules, and animations
-- `nitrogen` rotating wallpaper and random launcher-image helpers
+- `feh` rotating wallpaper (with `nitrogen` as a fallback) and random launcher-image helpers
 - `.bashrc` tweak for different terminal colors
 
 ## Layout
 
 ```text
+├── .bash_aliases
 ├── .bashrc
+├── anifetch/
 ├── bspwm/
 ├── colors.txt
+├── fastfetch/
 ├── fonts/
 ├── icons/
 ├── picom/
@@ -41,7 +44,7 @@ Package names vary by distro, but this setup expects roughly:
 - `polybar`
 - `rofi`
 - `picom`
-- `nitrogen`
+- `feh` (or `nitrogen` if it is available on your distro)
 - `python3`
 - `xfsettingsd`
 - `xfce4-terminal`
@@ -62,7 +65,9 @@ This repo is laid out to mirror `~/.config`, so symlinking works well.
 The installer:
 
 - installs the Xubuntu/apt packages needed by the configs and scripts
+- skips packages unavailable for the current Ubuntu release and reports them clearly
 - creates the `~/.config`, `~/Pictures`, and font symlinks
+- links the included shell aliases and anifetch/fastfetch configs
 - backs up existing files or directories before replacing them with symlinks
 - refreshes the font cache
 - regenerates the Polybar and Rofi color files
@@ -87,9 +92,11 @@ After installation:
 3. Adjust the machine-specific values listed below before treating this as plug-and-play.
 
 To make anifetch run on startup:
+
 1. Settings → Session and Startup → Application Autostart
 2. Click Add
 3. Command: `xfce4-terminal -e "myfetch; bash"`
+
 ## Keybindings
 
 The main bindings live in `sxhkd/sxhkdrc`.
@@ -114,16 +121,15 @@ Start here if you want to make the setup your own:
 - `bspwm/scripts/gradient.py`: generates `polybar/colors.ini` and `rofi/colors.rasi`
 - `bspwm/scripts/wallpaper.sh`: changes the wallpaper every 10 minutes
 - `bspwm/scripts/rofi_launcher.sh`: selects a random image for the launcher panel
-- `polybar/config.ini`: launcher apps, fonts, modules, and network interface names
+- `polybar/config.ini`: launcher apps, fonts, and modules
 - `rofi/config.rasi`, `rofi/powermenu.rasi`, `rofi/alt-tab.rasi`: launcher and switcher styling
 - `picom/picom.conf`: blur, opacity, shadows, corner radius, and animation behavior
-- `.bash_alises`: command aliases
+- `.bash_aliases`: command aliases
 
 ## Machine-specific notes
 
-A few values should be updated on a new machine:
+A few values may need to be updated on a new machine:
 
-- `polybar/config.ini` uses `wlp0s20f3` for Wi-Fi and `enp0s3` for Ethernet
 - `polybar` launches `google-chrome-stable`, `xfce4-terminal`, `thunar`, and `code`
 - `bspwm/scripts/wallpaper.sh` expects wallpapers in `~/Pictures/wallpapers`
 - `bspwm/scripts/rofi_launcher.sh` expects launcher images in `~/Pictures/rofi_images`
