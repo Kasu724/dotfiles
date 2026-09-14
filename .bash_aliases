@@ -13,8 +13,9 @@ myhelp() {
         '  myfetch    - custom anifetch: anifetch with takodachi animation' \
         '' \
         'Dotfiles commands:' \
-        '  ~/dotfiles/update.sh          - pull and refresh the dotfiles' \
-        '  ~/dotfiles/update.sh --reload - also reload the running desktop'
+        '  ~/dotfiles/update.sh             - pull and refresh the dotfiles' \
+        '  ~/dotfiles/update.sh --reload    - also reload the running desktop' \
+        '  ~/dotfiles/update.sh --packages  - also install dependencies'
 }
 
 alias myhelp='myhelp'

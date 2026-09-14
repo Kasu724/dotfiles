@@ -1,0 +1,12 @@
+{
+    "window.autoDetectColorScheme": true,
+    "workbench.preferredDarkColorTheme": "Visual Studio Dark",
+    "workbench.statusBar.visible": false,
+    "workbench.activityBar.location": "top",
+    "files.autoSave": "afterDelay",
+    "editor.fontFamily": "'JetBrainsMono Nerd Font', 'Symbols Nerd Font'",
+    "workbench.secondarySideBar.defaultVisibility": "hidden",
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "git.addAICoAuthor": "off"
+}

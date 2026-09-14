@@ -3,6 +3,7 @@ set -euo pipefail
 
 dotfiles_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 reload_desktop=0
+install_packages=0
 
 usage() {
     cat <<EOF
@@ -13,6 +14,7 @@ local symlinks and generated files.
 
 Options:
   --reload    Reload the running bspwm desktop after updating
+  --packages  Also install or update all declared dependencies
   -h, --help  Show this help
 
 Local changes are never stashed or discarded. The update stops if they conflict
@@ -38,6 +40,9 @@ parse_args() {
         case "$1" in
             --reload)
                 reload_desktop=1
+                ;;
+            --packages)
+                install_packages=1
                 ;;
             -h|--help)
                 usage
@@ -73,7 +78,11 @@ pull_dotfiles() {
 
 refresh_installation() {
     log "Refreshing links and generated files"
-    "$dotfiles_dir/install.sh" --skip-packages
+    if (( install_packages )); then
+        "$dotfiles_dir/install.sh"
+    else
+        "$dotfiles_dir/install.sh" --skip-packages
+    fi
 }
 
 reload_running_desktop() {

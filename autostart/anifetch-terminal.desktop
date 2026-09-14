@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=0.9.4
+Type=Application
+Name=anifetch terminal
+Comment=Open a terminal with the custom animated system information display
+Exec=xfce4-terminal -e "myfetch; bash"
+OnlyShowIn=XFCE;
+StartupNotify=false
+Terminal=false
+Hidden=false

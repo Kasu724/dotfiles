@@ -14,7 +14,10 @@ I like Ninomae Ina'nis
 - `rofi` app launcher, powermenu, and Alt+Tab switcher
 - `picom` config with blur, rounded corners, opacity rules, and animations
 - `feh` rotating wallpaper (with `nitrogen` as a fallback) and random launcher-image helpers
-- `.bashrc` tweak for different terminal colors
+- XFCE Terminal palette, font, cursor, keyboard shortcuts, and 30% transparency
+- purple `user@host`, orange path, and white separator/prompt shell colors
+- Adwaita Dark GTK theme with Adwaita icons and cursor, including GTK 4 dark preference
+- reproducible application installation and anifetch terminal autostart
 
 ## Layout
 
@@ -22,37 +25,50 @@ I like Ninomae Ina'nis
 ├── .bash_aliases
 ├── .bashrc
 ├── anifetch/
+├── autostart/
 ├── bspwm/
 ├── colors.txt
 ├── fastfetch/
 ├── fonts/
-├── icons/
 ├── picom/
 ├── polybar/
 ├── rofi/
 ├── rofi_images/
 ├── sxhkd/
-└── wallpapers/
+├── wallpapers/
+├── vscode/
+├── xfce4/
+├── install.sh
+└── update.sh
 ```
 
 ## Dependencies
 
-Package names vary by distro, but this setup expects roughly:
+The installer targets Ubuntu/Xubuntu and installs the complete runtime set,
+including:
 
-- `bspwm`
+- `bspwm` 0.9.12
 - `sxhkd`
 - `polybar`
-- `rofi`
-- `picom`
-- `feh` (or `nitrogen` if it is available on your distro)
+- `rofi` 2.0.0
+- `picom` v13 (needed by the animation rules)
+- `feh` and `nitrogen`
 - `python3`
-- `xfsettingsd`
-- `xfce4-terminal`
+- XFCE settings/session tools and `xfce4-terminal`
+- Google Chrome and Visual Studio Code
 - `flameshot`
+- shell completion, desktop notifications, and the standard command-line helpers used by the scripts
 - `pavucontrol`
 - `network-manager` tools such as `nm-connection-editor`
+- `cbonsai`, `unimatrix`, `asciiquarium`, `anifetch`, `fastfetch`, `chafa`, and `ffmpeg`
+- Adwaita themes/icons, Noto UI fonts, and the included Nerd Fonts
 - one lock command such as `betterlockscreen`, `i3lock-color`, `i3lock`, `slock`, or `xscreensaver-command`
-- Nerd Fonts, especially `JetBrainsMono Nerd Font` and `Symbols Nerd Font Mono`
+
+Ubuntu 24.04's bspwm, Rofi, and Picom packages are older than the binaries on
+the source machine. The installer therefore builds the pinned upstream releases
+when those exact versions are not already available. Chrome and VS Code are
+installed from their official Debian packages; the terminal animations use
+Snap or isolated `pipx` environments.
 
 ## Installation
 
@@ -65,17 +81,21 @@ This repo is laid out to mirror `~/.config`, so symlinking works well.
 The installer:
 
 - installs the Xubuntu/apt packages needed by the configs and scripts
-- skips packages unavailable for the current Ubuntu release and reports them clearly
+- installs Chrome, VS Code, and every command used by the aliases
+- installs the tracked VS Code extension and links its portable editor settings
+- builds the pinned bspwm, Rofi, and Picom releases when necessary
 - creates the `~/.config`, `~/Pictures`, and font symlinks
-- links the included shell aliases and anifetch/fastfetch configs
+- links the shell, terminal-shortcut, default-browser, autostart, and application configs
+- applies the XFCE Terminal palette/transparency and GTK dark appearance
 - backs up existing files or directories before replacing them with symlinks
 - refreshes the font cache
 - regenerates the Polybar and Rofi color files
 
-It does not replace `~/.bashrc` by default. To link the bundled shell config too, run:
+The bundled `.bashrc` is linked by default so the prompt colors are reproduced.
+To preserve an existing `.bashrc`, use:
 
 ```bash
-./install.sh --link-bashrc
+./install.sh --skip-bashrc
 ```
 
 Useful options:
@@ -98,6 +118,13 @@ The updater pulls the current branch with `--ff-only`, reruns the installer
 without installing packages, and refreshes the generated color and font files.
 It keeps local changes and stops if they conflict with the incoming commits.
 
+After dependency changes, or when bringing a partially configured machine up
+to date, include package installation:
+
+```bash
+./update.sh --packages
+```
+
 To also reload a running bspwm desktop and its components:
 
 ```bash
@@ -108,13 +135,7 @@ After installation:
 
 1. Start `bspwm` from your display manager or session.
 2. Let `bspwmrc` launch `sxhkd`, `picom`, `polybar`, the palette generator, and the wallpaper loop.
-3. Adjust the machine-specific values listed below before treating this as plug-and-play.
-
-To make anifetch run on startup:
-
-1. Settings → Session and Startup → Application Autostart
-2. Click Add
-3. Command: `xfce4-terminal -e "myfetch; bash"`
+3. The tracked XFCE autostart entry opens `myfetch` in a terminal.
 
 ## Keybindings
 
@@ -143,15 +164,22 @@ Start here if you want to make the setup your own:
 - `polybar/config.ini`: launcher apps, fonts, and modules
 - `rofi/config.rasi`, `rofi/powermenu.rasi`, `rofi/alt-tab.rasi`: launcher and switcher styling
 - `picom/picom.conf`: blur, opacity, shadows, corner radius, and animation behavior
+- `xfce4/apply-settings.sh`: terminal colors/transparency, DPI, GTK theme, icons, and dark mode
+- `xfce4/terminal/accels.scm`: terminal tab shortcuts
+- `vscode/settings.json`: editor font, layout, autosave, Git, and dark-theme behavior
 - `.bash_aliases`: command aliases
 
 ## Machine-specific notes
 
-A few values may need to be updated on a new machine:
+Portable visual and behavioral settings are tracked. These categories are
+deliberately not copied because they are hardware-specific or sensitive:
 
-- `polybar` launches `google-chrome-stable`, `xfce4-terminal`, `thunar`, and `code`
-- `bspwm/scripts/wallpaper.sh` expects wallpapers in `~/Pictures/wallpapers`
-- `bspwm/scripts/rofi_launcher.sh` expects launcher images in `~/Pictures/rofi_images`
+- monitor geometry and output names
+- keyboard and pointer device IDs
+- Wi-Fi credentials, browser profiles, histories, caches, tokens, and keyrings
+
+The wallpaper and launcher-image directories are symlinked into `~/Pictures`,
+so their paths remain portable between machines.
 
 ## Included assets
 
@@ -160,4 +188,6 @@ A few values may need to be updated on a new machine:
 - `rofi_images/` contains the images used by the launcher
 - Aliases:
     - `mybonsai`: custom cbonsai animation
+    - `mymatrix`: custom unimatrix animation
+    - `myquarium`: custom asciiquarium animation
     - `myfetch`: custom anifetch animation
